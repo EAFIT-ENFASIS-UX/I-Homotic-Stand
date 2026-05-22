@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>I-HOMOTIC | Visualizador 3D</title>
   <meta name="description" content="Visualizador 3D interactivo de modelos arquitectónicos — I-HOMOTIC" />
+  <link rel="icon" type="image/svg+xml" href="https://i-homotic.vercel.app/Favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -95,16 +96,16 @@
     .brand-logo {
       width: 32px;
       height: 32px;
-      background: var(--color-accent-primary);
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 0.75rem;
-      color: var(--color-bg);
-      letter-spacing: -0.5px;
       flex-shrink: 0;
+    }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .brand-text {
@@ -223,14 +224,14 @@
     .loading-brand-icon {
       width: 44px;
       height: 44px;
-      background: var(--color-accent-primary);
-      border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--color-bg);
+    }
+    .loading-brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .loading-brand-name {
@@ -300,56 +301,123 @@
     }
 
     /* ═══════════════════════════════════════
-       Help Tooltip
+       Help Modal Overlay
     ═══════════════════════════════════════ */
-    .help-hint {
+    .help-overlay {
       position: fixed;
-      bottom: 1.25rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
+      inset: 0;
+      z-index: 50;
+      background: rgba(8, 28, 53, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
-      gap: 1.5rem;
-      padding: 0.6rem 1.2rem;
-      background: rgba(8, 28, 53, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
+      justify-content: center;
+      padding: 2rem;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity var(--transition), visibility var(--transition);
+    }
+
+    .help-overlay.hidden {
       opacity: 0;
-      transition: opacity 0.5s ease;
+      visibility: hidden;
       pointer-events: none;
     }
 
-    .help-hint.visible {
-      opacity: 1;
+    .help-modal {
+      background: var(--color-bg-light);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 450px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      transform: translateY(0);
+      transition: transform var(--transition);
     }
 
-    .help-hint-item {
+    .help-overlay.hidden .help-modal {
+      transform: translateY(20px);
+    }
+
+    .help-header {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.65rem;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .help-header h3 {
+      font-size: 1.2rem;
+      color: var(--color-accent-primary);
+      margin: 0;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
       color: var(--color-text-muted);
-      white-space: nowrap;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color var(--transition);
     }
 
-    .help-hint-item svg {
-      width: 14px;
-      height: 14px;
-      fill: none;
-      stroke: var(--color-accent-primary);
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      flex-shrink: 0;
+    .close-btn:hover {
+      color: var(--color-text);
     }
 
-    .help-hint-sep {
-      width: 1px;
-      height: 12px;
-      background: rgba(255, 255, 255, 0.1);
+    .help-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .help-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .help-col h4 {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--color-surface-hover);
+      padding-bottom: 0.5rem;
+    }
+
+    .help-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    .help-item kbd {
+      background: var(--color-surface);
+      border: 1px solid var(--color-surface-hover);
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      font-family: 'Sora', sans-serif;
+      color: var(--color-text);
+      font-weight: 500;
+      width: fit-content;
+    }
+
+    /* Device-specific logic */
+    @media (hover: none) and (pointer: coarse) {
+      .help-col-desktop { display: none; }
+      .help-grid { grid-template-columns: 1fr; }
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .help-col-mobile { display: none; }
+      .help-grid { grid-template-columns: 1fr; }
     }
 
     /* ═══════════════════════════════════════
@@ -379,15 +447,6 @@
         height: 38px;
       }
 
-      .help-hint {
-        gap: 0.8rem;
-        padding: 0.5rem 0.8rem;
-      }
-
-      .help-hint-item {
-        font-size: 0.6rem;
-      }
-
       .loading-bar-container {
         width: 200px;
       }
@@ -404,7 +463,7 @@
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-content">
       <div class="loading-brand">
-        <div class="loading-brand-icon">iH</div>
+        <div class="loading-brand-icon"><img src="https://i-homotic.vercel.app/Favicon.svg" alt="I-HOMOTIC Logo" /></div>
         <span class="loading-brand-name">I-HOMOTIC</span>
       </div>
       <div class="loading-bar-container">
@@ -421,16 +480,25 @@
   <!-- Top Bar -->
   <div class="top-bar" id="top-bar">
     <a class="brand" href="https://i-homotic.vercel.app/" target="_blank" rel="noopener">
-      <div class="brand-logo">iH</div>
+      <div class="brand-logo"><img src="https://i-homotic.vercel.app/Favicon.svg" alt="I-HOMOTIC Logo" /></div>
       <div class="brand-text">
         <span class="brand-name">I-HOMOTIC</span>
         <span class="brand-subtitle">Visualizador 3D</span>
       </div>
     </a>
+    <button class="ctrl-btn" id="btn-help" title="Ayuda y Controles" aria-label="Ayuda">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </button>
   </div>
 
   <!-- Bottom Controls -->
   <div class="bottom-controls" id="bottom-controls">
+    <button class="ctrl-btn" id="btn-reset" title="Centrar y rotar" aria-label="Centrar y rotar">
+      <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
+    <button class="ctrl-btn" id="btn-bg" title="Alternar fondo" aria-label="Alternar fondo">
+      <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
     <button class="ctrl-btn" id="btn-fullscreen" title="Pantalla completa" aria-label="Pantalla completa">
       <svg viewBox="0 0 24 24">
         <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
@@ -438,21 +506,47 @@
     </button>
   </div>
 
-  <!-- Help Hints -->
-  <div class="help-hint" id="help-hint">
-    <div class="help-hint-item">
-      <svg viewBox="0 0 24 24"><path d="M15 15l-2 5L9 9l11 4-5 2z" /><path d="M1 1l6.5 6.5" /></svg>
-      Rotar
-    </div>
-    <div class="help-hint-sep"></div>
-    <div class="help-hint-item">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /><line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" /></svg>
-      Scroll → Zoom
-    </div>
-    <div class="help-hint-sep"></div>
-    <div class="help-hint-item">
-      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="8" cy="12" r="1" /><circle cx="16" cy="12" r="1" /></svg>
-      Clic derecho → Mover
+  <!-- Help Modal Overlay -->
+  <div class="help-overlay hidden" id="help-overlay">
+    <div class="help-modal">
+      <div class="help-header">
+        <h3>Controles 3D</h3>
+        <button class="close-btn" id="btn-close-help" aria-label="Cerrar ayuda">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="help-grid">
+        <div class="help-col help-col-desktop">
+          <h4>Desktop 💻</h4>
+          <div class="help-item">
+            <span>Rotar modelo</span>
+            <kbd>Clic Izquierdo + Arrastrar</kbd>
+          </div>
+          <div class="help-item">
+            <span>Zoom</span>
+            <kbd>Rueda del Ratón</kbd>
+          </div>
+          <div class="help-item">
+            <span>Mover cámara</span>
+            <kbd>Clic Derecho + Arrastrar</kbd>
+          </div>
+        </div>
+        <div class="help-col help-col-mobile">
+          <h4>Móvil 📱</h4>
+          <div class="help-item">
+            <span>Rotar modelo</span>
+            <kbd>Deslizar con 1 Dedo</kbd>
+          </div>
+          <div class="help-item">
+            <span>Zoom</span>
+            <kbd>Pellizcar</kbd>
+          </div>
+          <div class="help-item">
+            <span>Mover cámara</span>
+            <kbd>Deslizar con 2 Dedos</kbd>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -471,7 +565,8 @@
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+    import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
     // ─── DOM References ────────────────────
     const canvas = document.getElementById('viewer-canvas');
@@ -480,25 +575,36 @@
     const loadingPercentage = document.getElementById('loading-percentage');
     const loadingStatus = document.getElementById('loading-status');
     const btnFullscreen = document.getElementById('btn-fullscreen');
-    const helpHint = document.getElementById('help-hint');
+    const btnReset = document.getElementById('btn-reset');
+    const btnBg = document.getElementById('btn-bg');
+    const btnHelp = document.getElementById('btn-help');
+    const helpOverlay = document.getElementById('help-overlay');
+    const btnCloseHelp = document.getElementById('btn-close-help');
+
+    let initialCameraPosition = new THREE.Vector3();
+
+    // ─── Mobile Detection & Optimization ───
+    const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
 
     // ─── Scene Setup ───────────────────────
     const renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true,
-      alpha: false,
+      antialias: !isMobile, // Desactivar antialiasing en móviles para ganar FPS
+      alpha: true,
       powerPreference: 'high-performance'
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Limitar resolución a 1x en móviles (evita sobrecalentamiento y caídas de FPS)
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled = !isMobile; // Apagar sombras en móviles
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x081C35);
+    scene.background = null;
 
     // ─── Camera ────────────────────────────
     const camera = new THREE.PerspectiveCamera(
@@ -510,11 +616,16 @@
     camera.position.set(5, 3, 5);
 
     // ─── Environment (Studio Lighting) ─────
-    const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    pmremGenerator.compileEquirectangularShader();
-    const envTexture = pmremGenerator.fromScene(new RoomEnvironment()).texture;
-    scene.environment = envTexture;
-    pmremGenerator.dispose();
+    let envTexture = null;
+    new RGBELoader().load(
+      'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr',
+      function (texture) {
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+        scene.environment = texture;
+        envTexture = texture;
+        if (showEnvBg) scene.background = envTexture;
+      }
+    );
 
     // ─── Subtle Ambient + Directional for shadows ─
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
@@ -522,16 +633,19 @@
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(5, 10, 7);
-    dirLight.castShadow = true;
-    dirLight.shadow.mapSize.width = 2048;
-    dirLight.shadow.mapSize.height = 2048;
-    dirLight.shadow.camera.near = 0.1;
-    dirLight.shadow.camera.far = 50;
-    dirLight.shadow.camera.left = -10;
-    dirLight.shadow.camera.right = 10;
-    dirLight.shadow.camera.top = 10;
-    dirLight.shadow.camera.bottom = -10;
-    dirLight.shadow.bias = -0.001;
+    dirLight.castShadow = !isMobile;
+    
+    if (!isMobile) {
+      dirLight.shadow.mapSize.width = 2048;
+      dirLight.shadow.mapSize.height = 2048;
+      dirLight.shadow.camera.near = 0.1;
+      dirLight.shadow.camera.far = 50;
+      dirLight.shadow.camera.left = -10;
+      dirLight.shadow.camera.right = 10;
+      dirLight.shadow.camera.top = 10;
+      dirLight.shadow.camera.bottom = -10;
+      dirLight.shadow.bias = -0.001;
+    }
     scene.add(dirLight);
 
     // ─── Controls ──────────────────────────
@@ -551,8 +665,6 @@
     controls.addEventListener('start', () => {
       userInteracted = true;
       controls.autoRotate = false;
-      // Fade out help hint
-      helpHint.classList.remove('visible');
     });
 
     // ─── Load Model ────────────────────────
@@ -561,19 +673,22 @@
 
     const loader = new GLTFLoader();
     loader.setDRACOLoader(dracoLoader);
+    loader.setMeshoptDecoder(MeshoptDecoder);
 
     loader.load(
       './Modelo-final-detailled-normal.glb',
       (gltf) => {
         const model = gltf.scene;
 
-        // Enable shadows on all meshes
-        model.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
+        // Enable shadows on all meshes only if not mobile
+        if (!isMobile) {
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+        }
 
         // Center and scale model
         const box = new THREE.Box3().setFromObject(model);
@@ -591,32 +706,25 @@
         // Position camera based on model size
         const scaledSize = size.clone().multiplyScalar(scale);
         const dist = Math.max(scaledSize.x, scaledSize.y, scaledSize.z) * 2;
-        camera.position.set(dist, dist * 0.6, dist);
+        initialCameraPosition.set(dist, dist * 0.6, dist);
+        camera.position.copy(initialCameraPosition);
         controls.target.set(0, 0, 0);
         controls.update();
 
         // Update shadow camera
-        const halfSize = Math.max(scaledSize.x, scaledSize.z) * 1.5;
-        dirLight.shadow.camera.left = -halfSize;
-        dirLight.shadow.camera.right = halfSize;
-        dirLight.shadow.camera.top = halfSize;
-        dirLight.shadow.camera.bottom = -halfSize;
-        dirLight.shadow.camera.updateProjectionMatrix();
+        if (!isMobile) {
+          const halfSize = Math.max(scaledSize.x, scaledSize.z) * 1.5;
+          dirLight.shadow.camera.left = -halfSize;
+          dirLight.shadow.camera.right = halfSize;
+          dirLight.shadow.camera.top = halfSize;
+          dirLight.shadow.camera.bottom = -halfSize;
+          dirLight.shadow.camera.updateProjectionMatrix();
+        }
 
         // Hide loading screen
         loadingStatus.textContent = '¡Listo!';
         setTimeout(() => {
           loadingOverlay.classList.add('hidden');
-          // Show help hints after a brief delay
-          setTimeout(() => {
-            if (!userInteracted) {
-              helpHint.classList.add('visible');
-              // Auto-hide after 5 seconds
-              setTimeout(() => {
-                helpHint.classList.remove('visible');
-              }, 5000);
-            }
-          }, 800);
         }, 400);
       },
       (xhr) => {
@@ -641,6 +749,41 @@
         loadingBar.style.width = '100%';
       }
     );
+
+    // ─── Bottom Controls Actions ───────────
+    btnReset.addEventListener('click', () => {
+      controls.target.set(0, 0, 0);
+      camera.position.copy(initialCameraPosition);
+      controls.autoRotate = true;
+      userInteracted = false;
+      controls.update();
+    });
+
+    let showEnvBg = false;
+    btnBg.addEventListener('click', () => {
+      showEnvBg = !showEnvBg;
+      if (showEnvBg && envTexture) {
+        scene.background = envTexture;
+      } else {
+        scene.background = null;
+      }
+    });
+
+    // ─── Help Overlay ──────────────────────
+    btnHelp.addEventListener('click', () => {
+      helpOverlay.classList.remove('hidden');
+    });
+    
+    btnCloseHelp.addEventListener('click', () => {
+      helpOverlay.classList.add('hidden');
+    });
+
+    // Clic fuera del modal para cerrar
+    helpOverlay.addEventListener('click', (e) => {
+      if (e.target === helpOverlay) {
+        helpOverlay.classList.add('hidden');
+      }
+    });
 
     // ─── Fullscreen ────────────────────────
     btnFullscreen.addEventListener('click', () => {
